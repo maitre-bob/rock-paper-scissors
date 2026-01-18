@@ -1,76 +1,43 @@
+let humanScore = 0;
+let computerScore = 0;
+let currentRound = 0;
+
 
 function getComputerChoice() {
   const choices = ["rock", "paper", "scissors"];
   return choices[Math.floor(Math.random() * choices.length)];
 }
-console.log(getComputerChoice());
 
-function getHumanChoice() {
-  const choice = prompt("Choose: rock, paper, or scissors");
-  return choice.toLowerCase();
-}
-const human = getHumanChoice();
-console.log("User chose:", human);
-
-
-// Score des joueurs
-let humanScore = 0;
-let computerScore = 0;
-
-// Fonction pour jouer une manche
-function playRound(humanChoice, computerChoice) {
-  // Rendre le choix humain insensible à la casse
-  humanChoice = humanChoice.toLowerCase();
-
-  console.log("You chose:", humanChoice);
-  console.log("Computer chose:", computerChoice);
-
-  // Vérifier les égalités
+function playRound(humanChoice) {
+  const computerChoice = getComputerChoice();
+  let resultText = "";
+  const resultDiv = document.getElementById("result");
   if (humanChoice === computerChoice) {
-    console.log("It's a tie!");
-    return;
-  }
-
-  // Vérifier toutes les combinaisons gagnantes
-  if (
+    resultText = `Equality! You: ${humanChoice} | Computer: ${computerChoice}`;
+    resultDiv.style.color = "gray"
+  } else if (
     (humanChoice === "rock" && computerChoice === "scissors") ||
     (humanChoice === "paper" && computerChoice === "rock") ||
     (humanChoice === "scissors" && computerChoice === "paper")
   ) {
-    humanScore++; // humain gagne
-    console.log(`You win this round! ${humanChoice} beats ${computerChoice}`);
+    humanScore++;
+    resultText = `You win this round! ${humanChoice} beats ${computerChoice}`;
+    resultDiv.style.color = "green"
   } else {
-    computerScore++; // ordinateur gagne
-    console.log(`You lose this round! ${computerChoice} beats ${humanChoice}`);
+    computerScore++;
+    resultText = `You lose this round! ${computerChoice} beats ${humanChoice}`;
+    resultDiv.style.color = "red"
   }
 
-  // Afficher les scores actuels
-  console.log(`Score => You: ${humanScore} | Computer: ${computerScore}`);
+  currentRound++
+
+  document.getElementById("result").textContent = resultText;
+  document.getElementById("score").textContent = `Score => You: ${humanScore} | Computer: ${computerScore}`;
+  document.getElementById("round").textContent = `round: ${currentRound}`;
+  
 }
 
-
-
-
-// Fonction principale pour jouer 5 manches
-function playGame() {
-
-  // Jouer 5 manches
-  for (let i = 1; i <= 5; i++) {
-    console.log(`--- Round ${i} ---`);
-    const humanChoice = prompt("Choose: rock, paper, or scissors");
-    const computerChoice = getComputerChoice();
-    playRound(humanChoice, computerChoice,);
-  }
-
-  // Afficher le score final
-  console.log(`Final Score => You: ${humanScore} | Computer: ${computerScore}`);
-
-  // Déterminer le vainqueur
-  if (humanScore > computerScore) {
-    console.log("Congratulations! You won the game!");
-  } else if (humanScore < computerScore) {
-    console.log("Sorry! You lost the game!");
-  } else {
-    console.log("The game is a tie!");
-  }
-}
+// Listeners pour les boutons
+document.getElementById("rock").addEventListener("click", () => playRound("rock"));
+document.getElementById("paper").addEventListener("click", () => playRound("paper"));
+document.getElementById("scissors").addEventListener("click", () => playRound("scissors"));
